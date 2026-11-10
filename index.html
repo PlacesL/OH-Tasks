@@ -13,15 +13,15 @@
     --bg:#435B4D;
     --card:#506F57;
     --secondary:#526B65;
-    --text:#E5EDF0;
     --green:#84AF78;
     --green-light:#A9CD9E;
+    --text:#E5EDF0;
 }
 
-body.light{
+.light{
     --bg:#E5EDF0;
-    --card:#ffffff;
-    --secondary:#dce4e7;
+    --card:#FFFFFF;
+    --secondary:#DCE4E7;
     --text:#1C342C;
 }
 
@@ -49,28 +49,18 @@ h1{
     display:flex;
     justify-content:center;
     gap:15px;
-    margin-bottom:30px;
+    margin-bottom:25px;
     flex-wrap:wrap;
 }
 
-.top-bar button,
-.top-bar a{
-
+.top-btn{
     background:var(--green);
-
     color:#1C342C;
-
     border:none;
-
     padding:12px 20px;
-
-    border-radius:50px;
-
-    font-weight:700;
-
+    border-radius:999px;
     cursor:pointer;
-
-    text-decoration:none;
+    font-weight:700;
 }
 
 .container{
@@ -87,61 +77,16 @@ h1{
 
 .task-section,
 .completed-section{
-
     background:var(--card);
-
     padding:20px;
-
     border-radius:25px;
-
-    box-shadow:0 10px 25px rgba(0,0,0,.25);
+    box-shadow:0 8px 20px rgba(0,0,0,.2);
 }
 
 .task-section h2,
 .completed-section h2{
-    margin-bottom:15px;
     color:var(--green-light);
-}
-
-.progress-bar{
-
-    width:100%;
-
-    height:12px;
-
-    background:var(--secondary);
-
-    border-radius:50px;
-
-    overflow:hidden;
-
-    margin-bottom:8px;
-}
-
-.progress-fill{
-
-    width:0%;
-
-    height:100%;
-
-    background:linear-gradient(
-    90deg,
-    #84AF78,
-    #A9CD9E
-    );
-
-    transition:.4s;
-}
-
-.percent{
-
-    font-size:13px;
-
     margin-bottom:15px;
-
-    color:var(--green-light);
-
-    font-weight:700;
 }
 
 .input-group{
@@ -151,51 +96,37 @@ h1{
 }
 
 .input-group input{
-
     flex:1;
-
-    border:none;
-
     padding:12px;
-
+    border:none;
     border-radius:15px;
-
     background:var(--secondary);
-
     color:var(--green-light);
-
     font-weight:700;
 }
 
 .input-group input::placeholder{
-    color:#a7c5a8;
+    color:#bfd8bf;
 }
 
 .add-btn{
-
-    border:none;
-
     background:var(--green);
-
-    color:#1C342C;
-
+    border:none;
+    padding:12px 16px;
     border-radius:15px;
-
-    padding:12px 18px;
-
-    font-weight:700;
-
     cursor:pointer;
+    font-weight:700;
+    color:#1C342C;
 }
 
 .task{
     display:flex;
-    gap:10px;
     align-items:center;
-    padding:12px;
-    margin-bottom:10px;
-    border-radius:15px;
+    gap:10px;
     background:var(--secondary);
+    padding:12px;
+    border-radius:15px;
+    margin-bottom:10px;
 }
 
 .task input{
@@ -205,52 +136,73 @@ h1{
 }
 
 .completed-task{
-
     background:var(--green-light);
-
     color:#1C342C;
-
     padding:12px;
-
     border-radius:15px;
-
-    margin-bottom:10px;
-
     display:flex;
-
     gap:10px;
+    margin-bottom:10px;
 }
 
 .tag{
-
     background:var(--green);
-
     padding:4px 10px;
-
     border-radius:20px;
-
     font-size:12px;
-
     font-weight:700;
 }
 
 .clear-btn{
-
     width:100%;
-
-    margin-top:15px;
-
-    border:none;
-
-    padding:12px;
-
-    border-radius:15px;
-
     background:#1C342C;
-
     color:white;
-
+    border:none;
+    padding:12px;
+    border-radius:15px;
     cursor:pointer;
+    margin-top:15px;
+}
+
+.progress-bar{
+    height:12px;
+    background:var(--secondary);
+    border-radius:20px;
+    overflow:hidden;
+    margin-bottom:8px;
+}
+
+.progress-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(
+        90deg,
+        #84AF78,
+        #A9CD9E
+    );
+}
+
+.percent{
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:15px;
+}
+
+#historyPage{
+    display:none;
+}
+
+.history-item{
+    background:var(--secondary);
+    padding:8px;
+    font-size:12px;
+    border-radius:10px;
+    margin-bottom:6px;
+}
+
+.history-date{
+    opacity:.75;
+    font-size:10px;
 }
 
 @media(max-width:900px){
@@ -263,24 +215,23 @@ grid-template-columns:1fr;
 
 </style>
 </head>
-
 <body>
 
 <h1>Task Manager</h1>
 
-<div class="top-bar">
+<div class="top-bar" id="topBar">
 
-<button id="themeToggle">
+<button id="themeToggle" class="top-btn">
 🌙 Dark Mode
 </button>
 
-<a href="history.html">
+<button onclick="showHistory()" class="top-btn">
 📖 View Past Tasks
-</a>
+</button>
 
 </div>
 
-<div class="container">
+<div class="container" id="dashboard">
 
 <div class="left-side">
 
@@ -297,8 +248,16 @@ grid-template-columns:1fr;
 </div>
 
 <div class="input-group">
-<input id="dailyInput" placeholder="Add daily task...">
-<button class="add-btn" onclick="addTask('daily')">Add</button>
+
+<input id="dailyInput"
+placeholder="Add daily task...">
+
+<button
+class="add-btn"
+onclick="addTask('daily')">
+Add
+</button>
+
 </div>
 
 <div id="dailyTasks"></div>
@@ -318,8 +277,16 @@ grid-template-columns:1fr;
 </div>
 
 <div class="input-group">
-<input id="weeklyInput" placeholder="Add weekly task...">
-<button class="add-btn" onclick="addTask('weekly')">Add</button>
+
+<input id="weeklyInput"
+placeholder="Add weekly task...">
+
+<button
+class="add-btn"
+onclick="addTask('weekly')">
+Add
+</button>
+
 </div>
 
 <div id="weeklyTasks"></div>
@@ -339,8 +306,16 @@ grid-template-columns:1fr;
 </div>
 
 <div class="input-group">
-<input id="monthlyInput" placeholder="Add monthly task...">
-<button class="add-btn" onclick="addTask('monthly')">Add</button>
+
+<input id="monthlyInput"
+placeholder="Add monthly task...">
+
+<button
+class="add-btn"
+onclick="addTask('monthly')">
+Add
+</button>
+
 </div>
 
 <div id="monthlyTasks"></div>
@@ -355,8 +330,34 @@ grid-template-columns:1fr;
 
 <div id="completedTasks"></div>
 
-<button class="clear-btn" onclick="clearCompleted()">
+<button
+class="clear-btn"
+onclick="clearCompleted()">
+
 Clear Completed Tasks
+
+</button>
+
+</div>
+
+</div>
+
+<div id="historyPage">
+
+<h2 style="text-align:center;margin-bottom:20px;">
+Past Completed Tasks
+</h2>
+
+<div id="historyTasks"></div>
+
+<div style="text-align:center;margin-top:20px;">
+
+<button
+class="top-btn"
+onclick="backToDashboard()">
+
+⬅ Back To Dashboard
+
 </button>
 
 </div>
@@ -365,7 +366,10 @@ Clear Completed Tasks
 
 <script>
 
-let tasks = JSON.parse(localStorage.getItem("taskManager")) || {
+let tasks =
+JSON.parse(
+localStorage.getItem("taskManager")
+) || {
 
 daily:[],
 weekly:[],
@@ -376,21 +380,77 @@ stats:{
 daily:0,
 weekly:0,
 monthly:0
+},
+
+resets:{
+daily:"",
+weekly:"",
+monthly:""
 }
 
 };
 
 function saveTasks(){
+
 localStorage.setItem(
 "taskManager",
 JSON.stringify(tasks)
 );
+
+}
+
+function checkResets(){
+
+const now = new Date();
+
+const todayKey =
+now.toDateString();
+
+if(tasks.resets.daily !== todayKey){
+
+tasks.stats.daily = 0;
+tasks.resets.daily = todayKey;
+
+}
+
+let monday = new Date(now);
+
+monday.setDate(
+now.getDate() -
+now.getDay() + 1
+);
+
+const weekKey =
+monday.toDateString();
+
+if(tasks.resets.weekly !== weekKey){
+
+tasks.stats.weekly = 0;
+tasks.resets.weekly = weekKey;
+
+}
+
+const monthKey =
+now.getFullYear() + "-" +
+(now.getMonth()+1);
+
+if(tasks.resets.monthly !== monthKey){
+
+tasks.stats.monthly = 0;
+tasks.resets.monthly = monthKey;
+
+}
+
+saveTasks();
+
 }
 
 function addTask(type){
 
 const input =
-document.getElementById(type+"Input");
+document.getElementById(
+type + "Input"
+);
 
 const text =
 input.value.trim();
@@ -403,12 +463,12 @@ input.value="";
 
 saveTasks();
 renderTasks();
+
 }
 
 function completeTask(type,index){
 
-const task =
-tasks[type][index];
+const task = tasks[type][index];
 
 tasks.completed.push({
 text:task,
@@ -416,14 +476,18 @@ category:type
 });
 
 let history =
-JSON.parse(localStorage.getItem("taskHistory"))
-|| [];
+JSON.parse(
+localStorage.getItem(
+"taskHistory"
+)
+) || [];
 
 history.push({
 
 text:task,
 category:type,
-date:new Date().toLocaleString()
+date:new Date()
+.toLocaleString()
 
 });
 
@@ -458,11 +522,14 @@ function renderTasks(){
 .forEach(type=>{
 
 const container =
-document.getElementById(type+"Tasks");
+document.getElementById(
+type + "Tasks"
+);
 
 container.innerHTML="";
 
-tasks[type].forEach((task,index)=>{
+tasks[type].forEach(
+(task,index)=>{
 
 container.innerHTML += `
 
@@ -470,7 +537,12 @@ container.innerHTML += `
 
 <input
 type="checkbox"
-onchange="completeTask('${type}',${index})">
+onchange="
+completeTask(
+'${type}',
+${index}
+)
+">
 
 <span>${task}</span>
 
@@ -483,7 +555,9 @@ onchange="completeTask('${type}',${index})">
 });
 
 const completed =
-document.getElementById("completedTasks");
+document.getElementById(
+"completedTasks"
+);
 
 completed.innerHTML="";
 
@@ -494,7 +568,9 @@ completed.innerHTML += `
 <div class="completed-task">
 
 <span class="tag">
+
 ${task.category.toUpperCase()}
+
 </span>
 
 <span>
@@ -524,54 +600,157 @@ const percent =
 total === 0
 ? 0
 : Math.round(
-(tasks.stats[type]/total)*100
+(tasks.stats[type] /
+total) * 100
 );
 
 document.getElementById(
-type+"Progress"
-).style.width = percent+"%";
+type + "Progress"
+).style.width =
+percent + "%";
 
 document.getElementById(
-type+"Percent"
+type + "Percent"
 ).innerText =
-percent+"% Complete";
+percent + "% Complete";
 
 });
 
 }
+
+function showHistory(){
+
+document.getElementById(
+"dashboard"
+).style.display = "none";
+
+document.getElementById(
+"topBar"
+).style.display = "none";
+
+document.getElementById(
+"historyPage"
+).style.display = "block";
+
+const history =
+JSON.parse(
+localStorage.getItem(
+"taskHistory"
+)
+) || [];
+
+const historyBox =
+document.getElementById(
+"historyTasks"
+);
+
+historyBox.innerHTML="";
+
+history.reverse().forEach(task=>{
+
+historyBox.innerHTML += `
+
+<div class="history-item">
+
+<strong>
+
+${task.category.toUpperCase()}
+
+</strong>
+
+- ${task.text}
+
+<br>
+
+<span class="history-date">
+
+${task.date}
+
+</span>
+
+</div>
+
+`;
+
+});
+
+}
+
+function backToDashboard(){
+
+document.getElementById(
+"dashboard"
+).style.display = "grid";
+
+document.getElementById(
+"topBar"
+).style.display = "flex";
+
+document.getElementById(
+"historyPage"
+).style.display = "none";
+
+}
+
+checkResets();
 
 renderTasks();
 
 const toggle =
-document.getElementById("themeToggle");
+document.getElementById(
+"themeToggle"
+);
 
-if(localStorage.getItem("theme")==="light"){
+if(
+localStorage.getItem("theme")
+==="light"
+){
 
-document.body.classList.add("light");
+document.body.classList.add(
+"light"
+);
 
-toggle.innerText="☀️ Light Mode";
+toggle.innerText =
+"☀️ Light Mode";
 
 }
 
-toggle.addEventListener("click",()=>{
+toggle.addEventListener(
+"click",
+()=>{
 
-document.body.classList.toggle("light");
+document.body.classList.toggle(
+"light"
+);
 
-if(document.body.classList.contains("light")){
+if(
+document.body.classList.contains(
+"light"
+)
+){
 
-localStorage.setItem("theme","light");
+localStorage.setItem(
+"theme",
+"light"
+);
 
-toggle.innerText="☀️ Light Mode";
+toggle.innerText =
+"☀️ Light Mode";
 
 }else{
 
-localStorage.setItem("theme","dark");
+localStorage.setItem(
+"theme",
+"dark"
+);
 
-toggle.innerText="🌙 Dark Mode";
+toggle.innerText =
+"🌙 Dark Mode";
 
 }
 
-});
+}
+);
 
 </script>
 
