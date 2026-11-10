@@ -1,0 +1,74 @@
+`;
+ 
+});
+ 
+updateProgress();
+ 
+}
+ 
+function updateProgress(){
+ 
+["daily","weekly","monthly"]
+.forEach(type=>{
+ 
+const total =
+tasks[type].length +
+tasks.stats[type];
+ 
+const percent =
+total === 0
+? 0
+: Math.round(
+(tasks.stats[type]/total)*100
+);
+ 
+document.getElementById(
+type+"Progress"
+).style.width = percent+"%";
+ 
+document.getElementById(
+type+"Percent"
+).innerText =
+percent+"% Complete";
+ 
+});
+ 
+}
+ 
+renderTasks();
+ 
+const toggle =
+document.getElementById("themeToggle");
+ 
+if(localStorage.getItem("theme")==="light"){
+ 
+document.body.classList.add("light");
+ 
+toggle.innerText="☀️ Light Mode";
+ 
+}
+ 
+toggle.addEventListener("click",()=>{
+ 
+document.body.classList.toggle("light");
+ 
+if(document.body.classList.contains("light")){
+ 
+localStorage.setItem("theme","light");
+ 
+toggle.innerText="☀️ Light Mode";
+ 
+}else{
+ 
+localStorage.setItem("theme","dark");
+ 
+toggle.innerText="🌙 Dark Mode";
+ 
+}
+ 
+});
+ 
+</script>
+ 
+</body>
+</html>
