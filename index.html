@@ -72,5 +72,508 @@ h1{
 
     text-decoration:none;
 }
+
+.container{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+}
+
+.left-side{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.task-section,
+.completed-section{
+
+    background:var(--card);
+
+    padding:20px;
+
+    border-radius:25px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+.task-section h2,
+.completed-section h2{
+    margin-bottom:15px;
+    color:var(--green-light);
+}
+
+.progress-bar{
+
+    width:100%;
+
+    height:12px;
+
+    background:var(--secondary);
+
+    border-radius:50px;
+
+    overflow:hidden;
+
+    margin-bottom:8px;
+}
+
+.progress-fill{
+
+    width:0%;
+
+    height:100%;
+
+    background:linear-gradient(
+    90deg,
+    #84AF78,
+    #A9CD9E
+    );
+
+    transition:.4s;
+}
+
+.percent{
+
+    font-size:13px;
+
+    margin-bottom:15px;
+
+    color:var(--green-light);
+
+    font-weight:700;
+}
+
+.input-group{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.input-group input{
+
+    flex:1;
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:15px;
+
+    background:var(--secondary);
+
+    color:var(--green-light);
+
+    font-weight:700;
+}
+
+.input-group input::placeholder{
+    color:#a7c5a8;
+}
+
+.add-btn{
+
+    border:none;
+
+    background:var(--green);
+
+    color:#1C342C;
+
+    border-radius:15px;
+
+    padding:12px 18px;
+
+    font-weight:700;
+
+    cursor:pointer;
+}
+
+.task{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    padding:12px;
+    margin-bottom:10px;
+    border-radius:15px;
+    background:var(--secondary);
+}
+
+.task input{
+    width:18px;
+    height:18px;
+    accent-color:var(--green);
+}
+
+.completed-task{
+
+    background:var(--green-light);
+
+    color:#1C342C;
+
+    padding:12px;
+
+    border-radius:15px;
+
+    margin-bottom:10px;
+
+    display:flex;
+
+    gap:10px;
+}
+
+.tag{
+
+    background:var(--green);
+
+    padding:4px 10px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    font-weight:700;
+}
+
+.clear-btn{
+
+    width:100%;
+
+    margin-top:15px;
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:15px;
+
+    background:#1C342C;
+
+    color:white;
+
+    cursor:pointer;
+}
+
+@media(max-width:900px){
+
+.container{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Task Manager</h1>
+
+<div class="top-bar">
+
+<button id="themeToggle">
+🌙 Dark Mode
+</button>
+
+<a href="history.html">
+📖 View Past Tasks
+</a>
+
+</div>
+
+<div class="container">
+
+<div class="left-side">
+
+<div class="task-section">
+
+<h2>📅 Daily Tasks</h2>
+
+<div class="progress-bar">
+<div id="dailyProgress" class="progress-fill"></div>
+</div>
+
+<div id="dailyPercent" class="percent">
+0% Complete
+</div>
+
+<div class="input-group">
+<input id="dailyInput" placeholder="Add daily task...">
+<button class="add-btn" onclick="addTask('daily')">Add</button>
+</div>
+
+<div id="dailyTasks"></div>
+
+</div>
+
+<div class="task-section">
+
+<h2>📖 Weekly Tasks</h2>
+
+<div class="progress-bar">
+<div id="weeklyProgress" class="progress-fill"></div>
+</div>
+
+<div id="weeklyPercent" class="percent">
+0% Complete
+</div>
+
+<div class="input-group">
+<input id="weeklyInput" placeholder="Add weekly task...">
+<button class="add-btn" onclick="addTask('weekly')">Add</button>
+</div>
+
+<div id="weeklyTasks"></div>
+
+</div>
+
+<div class="task-section">
+
+<h2>🗓 Monthly Tasks</h2>
+
+<div class="progress-bar">
+<div id="monthlyProgress" class="progress-fill"></div>
+</div>
+
+<div id="monthlyPercent" class="percent">
+0% Complete
+</div>
+
+<div class="input-group">
+<input id="monthlyInput" placeholder="Add monthly task...">
+<button class="add-btn" onclick="addTask('monthly')">Add</button>
+</div>
+
+<div id="monthlyTasks"></div>
+
+</div>
+
+</div>
+
+<div class="completed-section">
+
+<h2>✅ Completed Tasks</h2>
+
+<div id="completedTasks"></div>
+
+<button class="clear-btn" onclick="clearCompleted()">
+Clear Completed Tasks
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+let tasks = JSON.parse(localStorage.getItem("taskManager")) || {
+
+daily:[],
+weekly:[],
+monthly:[],
+completed:[],
+
+stats:{
+daily:0,
+weekly:0,
+monthly:0
+}
+
+};
+
+function saveTasks(){
+localStorage.setItem(
+"taskManager",
+JSON.stringify(tasks)
+);
+}
+
+function addTask(type){
+
+const input =
+document.getElementById(type+"Input");
+
+const text =
+input.value.trim();
+
+if(!text) return;
+
+tasks[type].push(text);
+
+input.value="";
+
+saveTasks();
+renderTasks();
+}
+
+function completeTask(type,index){
+
+const task =
+tasks[type][index];
+
+tasks.completed.push({
+text:task,
+category:type
+});
+
+let history =
+JSON.parse(localStorage.getItem("taskHistory"))
+|| [];
+
+history.push({
+
+text:task,
+category:type,
+date:new Date().toLocaleString()
+
+});
+
+localStorage.setItem(
+"taskHistory",
+JSON.stringify(history)
+);
+
+tasks.stats[type]++;
+
+tasks[type].splice(index,1);
+
+saveTasks();
+
+renderTasks();
+
+}
+
+function clearCompleted(){
+
+tasks.completed=[];
+
+saveTasks();
+
+renderTasks();
+
+}
+
+function renderTasks(){
+
+["daily","weekly","monthly"]
+.forEach(type=>{
+
+const container =
+document.getElementById(type+"Tasks");
+
+container.innerHTML="";
+
+tasks[type].forEach((task,index)=>{
+
+container.innerHTML += `
+
+<div class="task">
+
+<input
+type="checkbox"
+onchange="completeTask('${type}',${index})">
+
+<span>${task}</span>
+
+</div>
+
+`;
+
+});
+
+});
+
+const completed =
+document.getElementById("completedTasks");
+
+completed.innerHTML="";
+
+tasks.completed.forEach(task=>{
+
+completed.innerHTML += `
+
+<div class="completed-task">
+
+<span class="tag">
+${task.category.toUpperCase()}
+</span>
+
+<span>
+${task.text}
+</span>
+
+</div>
+
+`;
+
+});
+
+updateProgress();
+
+}
+
+function updateProgress(){
+
+["daily","weekly","monthly"]
+.forEach(type=>{
+
+const total =
+tasks[type].length +
+tasks.stats[type];
+
+const percent =
+total === 0
+? 0
+: Math.round(
+(tasks.stats[type]/total)*100
+);
+
+document.getElementById(
+type+"Progress"
+).style.width = percent+"%";
+
+document.getElementById(
+type+"Percent"
+).innerText =
+percent+"% Complete";
+
+});
+
+}
+
+renderTasks();
+
+const toggle =
+document.getElementById("themeToggle");
+
+if(localStorage.getItem("theme")==="light"){
+
+document.body.classList.add("light");
+
+toggle.innerText="☀️ Light Mode";
+
+}
+
+toggle.addEventListener("click",()=>{
+
+document.body.classList.toggle("light");
+
+if(document.body.classList.contains("light")){
+
+localStorage.setItem("theme","light");
+
+toggle.innerText="☀️ Light Mode";
+
+}else{
+
+localStorage.setItem("theme","dark");
+
+toggle.innerText="🌙 Dark Mode";
+
+}
+
+});
+
+</script>
+
 </body>
 </html>
