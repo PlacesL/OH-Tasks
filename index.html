@@ -1,74 +1,76 @@
-`;
- 
-});
- 
-updateProgress();
- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owen's Task Manager</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --bg:#435B4D;
+    --card:#506F57;
+    --secondary:#526B65;
+    --text:#E5EDF0;
+    --green:#84AF78;
+    --green-light:#A9CD9E;
 }
- 
-function updateProgress(){
- 
-["daily","weekly","monthly"]
-.forEach(type=>{
- 
-const total =
-tasks[type].length +
-tasks.stats[type];
- 
-const percent =
-total === 0
-? 0
-: Math.round(
-(tasks.stats[type]/total)*100
-);
- 
-document.getElementById(
-type+"Progress"
-).style.width = percent+"%";
- 
-document.getElementById(
-type+"Percent"
-).innerText =
-percent+"% Complete";
- 
-});
- 
+
+body.light{
+    --bg:#E5EDF0;
+    --card:#ffffff;
+    --secondary:#dce4e7;
+    --text:#1C342C;
 }
- 
-renderTasks();
- 
-const toggle =
-document.getElementById("themeToggle");
- 
-if(localStorage.getItem("theme")==="light"){
- 
-document.body.classList.add("light");
- 
-toggle.innerText="☀️ Light Mode";
- 
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
- 
-toggle.addEventListener("click",()=>{
- 
-document.body.classList.toggle("light");
- 
-if(document.body.classList.contains("light")){
- 
-localStorage.setItem("theme","light");
- 
-toggle.innerText="☀️ Light Mode";
- 
-}else{
- 
-localStorage.setItem("theme","dark");
- 
-toggle.innerText="🌙 Dark Mode";
- 
+
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    padding:30px;
+    transition:.3s;
 }
- 
-});
- 
-</script>
- 
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+    font-size:3rem;
+}
+
+.top-bar{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin-bottom:30px;
+    flex-wrap:wrap;
+}
+
+.top-bar button,
+.top-bar a{
+
+    background:var(--green);
+
+    color:#1C342C;
+
+    border:none;
+
+    padding:12px 20px;
+
+    border-radius:50px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    text-decoration:none;
+}
 </body>
 </html>
