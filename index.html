@@ -194,10 +194,36 @@ h1{
 
 .history-item{
     background:var(--secondary);
-    padding:8px;
-    font-size:12px;
+    padding:8px 12px;
+    font-size:11px;
     border-radius:10px;
-    margin-bottom:6px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.history-left{
+    flex:1;
+    overflow:hidden;
+}
+
+.history-date{
+    opacity:.75;
+    font-size:9px;
+}
+
+.delete-history{
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-size:18px;
+    padding:4px;
+    color:#ff8a8a;
+}
+
+.delete-history:hover{
+    transform:scale(1.1);
 }
 
 .history-date{
@@ -205,12 +231,12 @@ h1{
     font-size:10px;
 }
 
-@media(max-width:900px){
-
-.container{
-grid-template-columns:1fr;
+@media(max-width:700px){
+ 
+#historyTasks{
+grid-template-columns:1fr !important;
 }
-
+ 
 }
 
 </style>
@@ -348,7 +374,13 @@ Clear Completed Tasks
 Past Completed Tasks
 </h2>
 
-<div id="historyTasks"></div>
+<div id="historyTasks"
+style="
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px;
+">
+</div>
 
 <div style="text-align:center;margin-top:20px;">
 
@@ -619,61 +651,89 @@ percent + "% Complete";
 }
 
 function showHistory(){
-
+ 
 document.getElementById(
 "dashboard"
 ).style.display = "none";
-
+ 
 document.getElementById(
 "topBar"
 ).style.display = "none";
-
+ 
 document.getElementById(
 "historyPage"
 ).style.display = "block";
-
+    
+ function deleteHistoryTask(index){
+ 
+let history =
+JSON.parse(
+localStorage.getItem(
+"taskHistory"
+)
+) || [];
+ 
+history.splice(index,1);
+ 
+localStorage.setItem(
+"taskHistory",
+JSON.stringify(history)
+);
+ 
+showHistory();
+ 
+}
 const history =
 JSON.parse(
 localStorage.getItem(
 "taskHistory"
 )
 ) || [];
-
+ 
 const historyBox =
 document.getElementById(
 "historyTasks"
 );
-
+ 
 historyBox.innerHTML="";
-
-history.reverse().forEach(task=>{
-
+ 
+history.reverse().forEach((task,index)=>{
+ 
 historyBox.innerHTML += `
-
+ 
 <div class="history-item">
-
+ 
+<div class="history-left">
+ 
 <strong>
-
 ${task.category.toUpperCase()}
-
 </strong>
-
+ 
 - ${task.text}
-
+ 
 <br>
-
+ 
 <span class="history-date">
-
 ${task.date}
-
 </span>
-
+ 
 </div>
-
+ 
+<button
+class="delete-history"
+onclick="deleteHistoryTask(${history.length - 1 - index})"
+title="Delete Task">
+ 
+🗑️
+ 
+</button>
+ 
+</div>
+ 
 `;
-
+ 
 });
-
+ 
 }
 
 function backToDashboard(){
